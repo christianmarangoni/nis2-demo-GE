@@ -1,9 +1,10 @@
-# Estratto D.Lgs. 138/2024 - Governance
+# Estratto D.Lgs. 138/2024 - Governance, Compliance e Sanzioni
 
-*(Questo testo simula la parte di normativa che andrà caricata nel Datastore GCS per l'area Governance)*
+**Art. 23 - Governance e responsabilità:**
+Gli organi di amministrazione e direttivi devono approvare le misure di gestione dei rischi e sovrintenderne l'implementazione, pena la responsabilità personale. Devono seguire formazione specifica e promuoverla per i dipendenti.
 
-**Articolo relativo alla Governance e responsabilità:**
-Gli organi di amministrazione e direttivi dei soggetti essenziali e importanti devono approvare le misure di gestione dei rischi di sicurezza informatica adottate dai rispettivi soggetti e sovrintenderne l'implementazione. I membri di tali organi possono essere ritenuti responsabili in caso di inosservanza da parte del soggetto interessato degli obblighi previsti dal decreto.
+**Art. 7 e 30 - Registrazione e Categorizzazione:**
+Obbligo di registrazione annuale sulla piattaforma ACN (tra gennaio e febbraio) e categorizzazione dei servizi (maggio-giugno).
 
-**Formazione:**
-I membri degli organi di amministrazione e direttivi devono seguire una formazione specifica, e i soggetti obbligati devono incoraggiare l'offerta di una formazione analoga su base regolare ai dipendenti al fine di consentire loro di identificare i rischi e valutare le pratiche di igiene informatica che hanno un impatto sui servizi offerti.
+**Art. 38 - Sanzioni:**
+Sanzioni amministrative pecuniarie fino a 10 milioni di euro o al 2% del fatturato mondiale per i soggetti essenziali (7M o 1,4% per gli importanti). Possibilità di sospensione temporanea dalle funzioni dirigenziali per le persone fisiche con responsabilità direttive in caso di inosservanza.

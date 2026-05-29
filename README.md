@@ -1,57 +1,37 @@
-# Blueprint Configurazione Prototipo NIS2 (Vertex AI)
+# Prototipo Agentic RAG per Conformità NIS2 (Lepida)
 
-In base alle conferme e all'analisi del **D.Lgs. 138/2024** (NIS2 Italia), questo documento funge da *blueprint* per implementare il prototipo in modalità no-code su Google Cloud (Gemini Enterprise App / Vertex AI Agent Builder).
+Questo repository contiene la struttura progettuale e le istruzioni (System Prompts) per la configurazione di un sistema **Agentic RAG** basato su Google Cloud Vertex AI Agent Builder, dedicato all'assessment della conformità alla direttiva NIS2 (D.Lgs 138/2024) per Lepida.
 
-## Architettura del Prototipo
+L'architettura è **no-code**, permettendo una configurazione diretta tramite l'interfaccia standard di Vertex AI.
 
-> **Sulla frammentazione del datastore:** 
-La frammentazione dei documenti in base all'area è la **best practice** per applicazioni RAG avanzate. Il D.Lgs. 138/2024 (e le successive determinazioni ACN) impone misure raggruppabili in 5 categorie chiave. Creare un Datastore specifico per ogni area riduce drasticamente le "allucinazioni" dell'LLM, aumentando la precisione perché ogni Agente Specialista cercherà solo nel perimetro di sua competenza.
+## L'Architettura Multi-Agente (Hierarchical Routing)
 
-## 1. Definizione delle Aree Funzionali (Gli Agenti Specialisti)
+A seguito di una *Gap Analysis* completa sull'intero testo legislativo, l'architettura è strutturata su **1 Root Agent (Supervisore)** e **8 Sub-Agenti Specialisti**, garantendo il 100% di copertura dell'Art. 24 comma 2 (Misure di gestione dei rischi) e degli obblighi di notifica, registrazione e sanzionatori.
 
-Dall'analisi della NIS2 e dei requisiti di gestione del rischio, struttureremo 5 Agenti Specialisti:
+### Panoramica degli Agenti
 
-1.  **Agente Governance e Sicurezza** (Policy, formazione, responsabilità dei vertici).
-2.  **Agente Gestione Incidenti** (Incident response, notifica e monitoraggio).
-3.  **Agente Continuità Operativa** (Business continuity, backup e crisis management).
-4.  **Agente Supply Chain** (Sicurezza degli approvvigionamenti e fornitori).
-5.  **Agente Sicurezza Logica e Igiene TIC** (Controllo accessi, crittografia, vulnerabilità).
+| Agente | Ruolo e Obiettivo | Copertura Normativa |
+|---|---|---|
+| **Root Supervisor** | Punto di contatto unico. Analizza l'intento dell'utente e instrada la richiesta allo specialista competente. | N/A (Routing) |
+| **Governance, Compliance e Sanzioni** | Valuta responsabilità vertici, formazione, registrazione ACN e consapevolezza sanzioni. | Art. 23, 7, 27, 30, 38 |
+| **Gestione Incidenti** | Valuta procedure di incident response e rispetto delle tempistiche di notifica al CSIRT Italia. | Art. 24(b), 25, 26 |
+| **Continuità Operativa** | Valuta piani di backup, disaster recovery e crisis management. | Art. 24(c) |
+| **Supply Chain** | Valuta la sicurezza della catena di fornitura e i requisiti verso i fornitori diretti. | Art. 24(d) |
+| **Igiene TIC, Crittografia e MFA** | Valuta le pratiche operative di igiene, l'uso della crittografia e l'implementazione dell'MFA. | Art. 24(g,h,l) |
+| **Analisi Rischi e Audit** | Valuta l'impianto metodologico di analisi dei rischi e le procedure di audit di efficacia delle misure. | Art. 24(a,f) |
+| **Sicurezza Sistemi e Vulnerabilità** | Valuta il ciclo di vita sicuro del software (SDLC) e la gestione/divulgazione delle vulnerabilità. | Art. 24(e), 16 |
+| **Personale, Accessi e Asset** | Valuta l'affidabilità HR, il controllo accessi (IAM), l'inventario asset e la sicurezza fisica. | Art. 24(i) |
 
-La configurazione delle istruzioni di sistema per ciascun agente e l'estratto della normativa da caricare sono disponibili nelle rispettive sottocartelle di questa repository.
+## Gestione dei Dati (Data Stores)
 
-## 2. Architettura dei Datastore (Vertex AI Search)
+Per evitare allucinazioni e garantire risposte precise, la base di conoscenza viene segmentata. Durante la configurazione in Vertex AI, è necessario:
+1. Creare **Data Store (GCS)** distinti, contenenti gli estratti della normativa per ogni dominio.
+2. Includere i documenti aziendali Lepida pertinenti a quella specifica area (tramite integrazione Google Drive o GCS).
+3. Collegare ciascun Data Store al rispettivo Agente Specialista tramite i Tools di Data Store.
 
-### Google Cloud Storage (GCS) - "La Regola"
-Per i documenti complessi (il D.Lgs. 138/2024, gli allegati tecnici, le linee guida ACN e NIST), dividiamo i documenti in 5 bucket o 5 folder separati su GCS, uno per ogni area funzionale. 
-*   **Esempio:** `gs://lepida-nis2-normative/gestione_incidenti/` (conterrà solo la manualistica normativa relativa agli incidenti).
-*   Da questi 5 percorsi creeremo **5 Data Store separati** in Vertex AI.
+## Istruzioni di Setup su Vertex AI Agent Builder
 
-### Google Drive - "La Pratica"
-Per la flessibilità richiesta, utilizzeremo **Shared Drives**. Configureremo un Data Store in Vertex AI collegato a un Drive condiviso chiamato `NIS2_Valutazione_Lepida`.
-All'interno, creeremo 5 cartelle (una per area). Gli operatori caricheranno qui i loro documenti semplici (policy attuali, moduli, organigrammi). I permessi potranno essere mantenuti ampi a livello di Shared Drive.
-
-## 3. Configurazione No-Code su Vertex AI Agent Builder
-
-La costruzione fisica del prototipo segue questi passaggi sull'interfaccia standard di Vertex AI Agent Builder (Dialogflow CX Agent Designer):
-
-> [!TIP]
-> Tutto questo setup avviene senza scrivere codice, sfruttando i "Tools" e il routing nativo di Gemini Enterprise.
-
-1.  **Creazione dell'Agente Root (Supervisore):**
-    *   **Istruzione:** "Sei l'assistente principale per la conformità NIS2 di Lepida. Il tuo scopo è capire quale area della sicurezza l'utente vuole valutare e inoltrare la richiesta allo specialista competente. Non rispondere direttamente nel merito."
-2.  **Creazione dei Tools (Data Store):**
-    *   Nella sezione *Tools*, aggiungeremo il connettore a GCS (5 datastore normativi) e il connettore a Google Drive.
-3.  **Creazione dei 5 Sub-Agents (Specialisti):**
-    *   Prendiamo ad esempio l'**Agente Gestione Incidenti**.
-    *   **Istruzione:** "Sei l'esperto NIS2 per la gestione incidenti. Usa il tool `GCS_Incidenti_Normativa` per capire i requisiti legali. Usa il tool `Drive_Lepida_Incidenti` per leggere le procedure attuali di Lepida. Confrontali e scrivi un report su cosa manca."
-    *   **Assegnazione Tools:** A questo sub-agente assegneremo solo i due datastore specifici della sua area.
-4.  **Impostazione del Routing:**
-    *   Nell'agente Root, configureremo transizioni basate sugli intenti (es. se l'utente nomina "backup", passa all'Agente Continuità Operativa).
-
-## Conclusione
-
-Con questo setup, potrai presentare a Lepida un prototipo funzionante direttamente nell'interfaccia di test di Agent Builder. 
-L'operatore caricherà un documento in Drive, aprirà la chat di test sulla destra dello schermo e scriverà: *"Valuta la nostra nuova policy di Incident Response"*. 
-L'agente Root capirà l'intento, passerà il comando al Sub-Agent Gestione Incidenti, che leggerà GCS, leggerà Drive, e fornirà l'analisi dei gap. 
-
-Tutto gestito con servizi Enterprise nativi e zero codice backend.
+1. Creare l'**Agente Root** usando il modello `gemini-2.5-flash` per garantire bassa latenza nel routing. Assegnare le istruzioni presenti nella cartella `root_supervisor`.
+2. Creare progressivamente gli **8 Agenti Specialisti** usando il modello `gemini-3-pro` per il ragionamento complesso, copiando le istruzioni dalle rispettive cartelle.
+3. Fornire agli Specialisti l'accesso ai rispettivi Data Store tramite i Tool standard dell'interfaccia.
+4. Nell'Agente Root, aggiungere le regole di routing (tramite l'interfaccia Agent Builder) per delegare l'esecuzione agli Specialisti in base all'intento rilevato.

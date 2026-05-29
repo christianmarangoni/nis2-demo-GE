@@ -1,11 +1,7 @@
-# Estratto D.Lgs. 138/2024 - Igiene Informatica e Sicurezza Logica
+# Estratto D.Lgs. 138/2024 - Igiene TIC, Crittografia e MFA
 
-*(Questo testo simula la parte di normativa che andrà caricata nel Datastore GCS per l'area Sicurezza Logica)*
-
-**Misure Tecniche:**
-Le misure di gestione del rischio devono obbligatoriamente comprendere controlli tecnici che includono:
-- **Igiene informatica di base:** aggiornamenti tempestivi del software e dell'hardware, gestione delle patch, segmentazione della rete e configurazioni sicure dei sistemi.
-- **Crittografia:** politiche rigorose sull'uso della crittografia dei dati a riposo e in transito e, ove opportuno, utilizzo della cifratura end-to-end.
-- **Controllo degli accessi:** implementazione di policy rigorose di controllo degli accessi ai sistemi informativi aziendali.
-- **Autenticazione:** utilizzo obbligatorio dell'autenticazione a più fattori (MFA) o dell'autenticazione continua per gli accessi ai sistemi, in particolare per gli accessi remoti e privilegiati.
-- **Vulnerabilità:** gestione e divulgazione coordinata delle vulnerabilità scoperte nei sistemi.
+**Art. 24, comma 2:**
+Le misure di gestione dei rischi devono includere almeno:
+**g)** pratiche di igiene di base in materia di sicurezza informatica e formazione in materia di sicurezza informatica;
+**h)** politiche e procedure relative all'uso della crittografia e, se del caso, della cifratura;
+**l)** se del caso, l'uso di soluzioni di autenticazione a più fattori o di autenticazione continua, di comunicazioni vocali, video e testuali protette e di sistemi di comunicazione di emergenza protetti da parte del soggetto al proprio interno.

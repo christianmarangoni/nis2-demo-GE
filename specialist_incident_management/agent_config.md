@@ -4,7 +4,7 @@
 Agente specializzato nel valutare le procedure di incident response, rilevamento, contenimento e notifica degli incidenti significativi al CSIRT Italia.
 
 **Modello suggerito:**
-`gemini-1.5-pro`
+`gemini-3-pro`
 
 ## System Instructions (da incollare nell'interfaccia)
 ```text

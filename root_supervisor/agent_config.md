@@ -4,7 +4,7 @@
 Punto di contatto unico per l'operatore Lepida. Gestisce l'intento dell'utente e instrada la conversazione all'agente specialista corretto. Da configurare come "Root Agent" in Vertex AI.
 
 **Modello suggerito:**
-`gemini-1.5-flash` (ideale per routing veloce e comprensione dell'intento)
+`gemini-2.5-flash` (ideale per routing veloce e comprensione dell'intento, sostituisce le precedenti versioni 1.5)
 
 ## System Instructions (da incollare nell'interfaccia)
 ```text

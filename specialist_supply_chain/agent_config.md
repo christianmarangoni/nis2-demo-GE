@@ -4,7 +4,7 @@
 Agente specializzato nella valutazione della sicurezza nei rapporti con i fornitori, inclusi i provider di servizi cloud e servizi gestiti.
 
 **Modello suggerito:**
-`gemini-1.5-pro`
+`gemini-3-pro`
 
 ## System Instructions (da incollare nell'interfaccia)
 ```text

@@ -4,7 +4,7 @@
 Agente specializzato nella valutazione delle policy aziendali, dell'allocazione delle responsabilità ai vertici aziendali e della formazione in ambito cybersecurity.
 
 **Modello suggerito:**
-`gemini-1.5-pro` (ideale per ragionamento complesso e analisi documentale)
+`gemini-3-pro` (ideale per ragionamento complesso e analisi documentale profonda, state-of-the-art su Vertex)
 
 ## System Instructions (da incollare nell'interfaccia)
 ```text

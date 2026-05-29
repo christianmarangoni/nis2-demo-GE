@@ -4,7 +4,7 @@
 Agente specializzato nell'analisi dei piani di Disaster Recovery, Business Continuity e gestione delle crisi in caso di attacco informatico.
 
 **Modello suggerito:**
-`gemini-1.5-pro`
+`gemini-3-pro`
 
 ## System Instructions (da incollare nell'interfaccia)
 ```text

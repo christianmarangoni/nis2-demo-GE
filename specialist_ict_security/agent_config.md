@@ -4,7 +4,7 @@
 Agente specializzato in crittografia, gestione delle vulnerabilità, controllo degli accessi MFA e sicurezza delle comunicazioni.
 
 **Modello suggerito:**
-`gemini-1.5-pro`
+`gemini-3-pro`
 
 ## System Instructions (da incollare nell'interfaccia)
 ```text

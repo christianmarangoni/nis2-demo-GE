@@ -36,35 +36,22 @@ Sistema multi-agente basato su Vertex AI Agent Builder per l'assessment della co
 | Art. 34-37 | Vigilanza e audit | Analisi Rischi e Audit |
 | Art. 38 | Sanzioni | Governance |
 
-## Struttura Repository
+## Struttura del Repository
 
-```
-nis2-agentic-rag-prototype/
-├── README.md
-├── generate_agents.py
-├── root_supervisor/
-├── specialist_governance/
-├── specialist_incident/
-├── specialist_continuity/
-├── specialist_supply_chain/
-├── specialist_ict_security/
-├── specialist_risk_audit/
-├── specialist_system_vuln/
-├── specialist_personnel_asset/
-├── documenti_reali/                # Documenti pubblici reali scaricati (da inserire in Google Drive, <80 pag.)
-│   ├── manuale_operativo.pdf       # Manuale Operativo LepidaID (SPID)
-│   ├── carta_dei_servizi.pdf       # Carta dei Servizi LepidaID
-│   ├── manuale_utente.pdf          # Guida utente LepidaID
-│   ├── soluzioni_tecnologiche.pdf  # Allegati tecnici e soluzioni
-│   └── trattamento_dati.pdf        # Informativa e flussi privacy (GDPR)
-├── documenti_simulati/             # Documenti interni simulati (riservati) in .md
-│   ├── Piano_Incident_Response_Lepida_SIMULATO.md
-│   ├── Piano_Disaster_Recovery_e_Backup_Lepida_SIMULATO.md
-│   ├── Procedura_Qualifica_Fornitori_ICT_Lepida_SIMULATO.md
-│   ├── Policy_Gestione_Vulnerabilita_e_SDLC_Lepida_SIMULATO.md
-│   └── Metodologia_Analisi_Rischi_e_Audit_Lepida_SIMULATO.md
-└── gcs_upload/                     # Copie di tutti i file .md rinominati con estensione .txt pronti per Google Cloud Storage (GCS)
-```
+*   [DEMO_PLAYBOOK.md](DEMO_PLAYBOOK.md): Guida passo-passo per configurare e presentare la demo con scenari di verifica e gap-fix.
+*   [root_supervisor/](root_supervisor/README.md): Agente Root (Supervisore NIS2).
+*   [specialist_governance/](specialist_governance/README.md): Governance, Compliance e Sanzioni (Art. 23, 7, 27, 30, 38).
+*   [specialist_incident/](specialist_incident/README.md): Gestione Incidenti e Notifiche (Art. 24 c.2 lett. b, Art. 25, 26).
+*   [specialist_continuity/](specialist_continuity/README.md): Continuità Operativa e DR (Art. 24 c.2 lett. c).
+*   [specialist_supply_chain/](specialist_supply_chain/README.md): Sicurezza Supply Chain (Art. 24 c.2 lett. d).
+*   [specialist_ict_security/](specialist_ict_security/README.md): Igiene TIC, Crittografia e MFA (Art. 24 c.2 lett. g, h, l, Art. 28).
+*   [specialist_risk_audit/](specialist_risk_audit/README.md): Analisi Rischi e Audit di Efficacia (Art. 24 c.2 lett. a, f, Art. 34, 35).
+*   [specialist_system_vuln/](specialist_system_vuln/README.md): Sicurezza Sistemi e Vulnerabilità (Art. 24 c.2 lett. e, Art. 16).
+*   [specialist_personnel_asset/](specialist_personnel_asset/README.md): Personale, Accessi, Asset e Sicurezza Fisica (Art. 24 c.2 lett. i).
+*   [documenti_reali/](documenti_reali/README.md): Cartella contenente i documenti pubblici reali scaricati (da inserire in Google Drive).
+*   [documenti_simulati/](documenti_simulati/README.md): Cartella contenente i piani e le policy aziendali simulate (in formato Markdown).
+*   [gcs_upload/](gcs_upload/README.md): Copie di tutti i file di configurazione, normative e simulazioni rinominati in `.txt` pronti per GCS.
+
 
 Ogni cartella degli agenti contiene:
 - **`agent_config.md`** — System prompt, modello e descrizione dell'agente

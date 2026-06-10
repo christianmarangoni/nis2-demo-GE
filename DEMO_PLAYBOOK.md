@@ -2,7 +2,9 @@
 
 Questo manuale descrive passo dopo passo come configurare ed eseguire la demo dell'**Agentic RAG** per la conformità NIS2 di Lepida SpA utilizzando Google Cloud Vertex AI Agent Builder.
 
-A differenza di una semplice demo di domanda/risposta (Q&A), questo flusso illustra scenari interattivi in cui **l'utente fornisce all'agente un documento aziendale obsoleto (non conforme)** e **l'agente, conoscendo le regole della NIS2, scrive e genera un nuovo documento corretto (patch/sostitutivo) che risolve tutte le lacune individuate.**
+La demo è strutturata per mostrare due tipi di flussi di lavoro:
+1.  **Flussi di Sola Verifica (Compliance Check)**: L'utente interroga l'agente per verificare se i documenti e le misure attuali sono già conformi ai requisiti della NIS2. L'agente risponde confermando la conformità e mappando i controlli effettuati sugli articoli della legge.
+2.  **Flussi di Rilevamento e Correzione (Gap & Fix)**: L'utente fornisce all'agente un documento aziendale obsoleto (non conforme). L'agente individua le mancanze e genera autonomamente un nuovo documento sostitutivo o integrativo conforme in formato Markdown.
 
 ---
 
@@ -23,90 +25,68 @@ Crea i **Data Store** separati su Vertex AI Agent Builder, caricando sia i docum
 
 ---
 
-## FASE 2: Esecuzione degli Scenari Interattivi di Demo
+## FASE 2: Esecuzione degli Scenari di Sola Verifica (Compliance Check)
 
-### SCENARIO 1: Rilevamento e Fix Automatico del Piano Incident Response Obsoleto
+In questi scenari, l'agente esamina i documenti aziendali conformi e certifica che non vi sono violazioni o lacune.
 
-#### 1. Obiettivo dello Scenario
-Dimostrare come l'agente rilevi che il vecchio piano incident response non rispetta le regole NIS2 e scriva autonomamente la versione corretta conforme alla legge.
-
-#### 2. Prompt da digitare nella chat (all'agente Root o allo Specialista Incidenti):
-> *"Ho caricato sul nostro data store il documento `Piano_Incident_Response_OBSOLETO.txt`. Puoi analizzarlo a fondo rispetto ai requisiti del D.Lgs. 138/2024 e scrivere un nuovo documento sostitutivo in formato Markdown che corregga tutte le mancanze e ci renda conformi alla NIS2?"*
-
-#### 3. Comportamento dell'Agente:
-*   L'agente Root indirizza la richiesta allo **Specialista Gestione Incidenti**.
-*   Lo specialista confronta la sezione `normativa_estratto.txt` (Art. 25, 26) con `Piano_Incident_Response_OBSOLETO.txt`.
-*   Rileva che il documento obsoleto parla di denunce alla Polizia entro 48 ore lavorative, non cita il CSIRT Italia, né i tempi di pre-notifica obbligatori (24h e 72h).
-*   Genera un nuovo piano completo e strutturato in Markdown.
-
-#### 4. Risposta attesa (Output dell'Agente):
-L'agente risponderà con un'analisi critica delle lacune e genererà il documento corretto:
-
-```markdown
-### Analisi delle Non-Conformità (Gap Analysis)
-Il documento `Piano_Incident_Response_OBSOLETO.txt` presenta gravi lacune rispetto all'Art. 25 del D.Lgs. 138/2024:
-1. **Mancanza dei canali istituzionali:** Il piano prevede solo la denuncia alla Polizia Postale, senza menzionare il CSIRT Italia.
-2. **Tempistiche violate:** Prevede notifiche entro 48 ore lavorative dalla risoluzione, mentre la NIS2 impone una pre-notifica entro 24 ore dalla conoscenza dell'incidente significativo.
-3. **Mancanza della relazione finale:** Non è previsto l'invio della relazione finale entro 1 mese.
+### SCENARIO 1: Verifica Continuità Operativa e Backup Anti-Ransomware
+*   **Obiettivo:** Verificare se il piano di DR e Backup simulato soddisfa i requisiti dell'Art. 24 comma 2 lettera c).
+*   **Prompt da digitare in chat (all'agente Root o allo Specialista Continuità):**
+    > *"Analizza il documento `Piano_Disaster_Recovery_e_Backup_Lepida_SIMULATO.txt` e verifica se la nostra politica di backup e disaster recovery è conforme all'Art. 24 comma 2 lettera c) della NIS2. Ci sono lacune?"*
+*   **Comportamento dell'Agente:**
+    1. L'agente Root indirizza la richiesta allo **Specialista Continuità Operativa**.
+    2. L'agente interroga `ds-continuity` e confronta le misure reali (strategia 3-2-1-1, backup WORM immutabili a 30 giorni, RTO/RPO per LepidaID) con la normativa.
+*   **Risposta attesa (Sola Verifica):**
+    > *"**Stato: VERIFICATO (CONFORME)**. Il documento `Piano_Disaster_Recovery_e_Backup_Lepida_SIMULATO.txt` soddisfa pienamente i requisiti dell'Art. 24 c. 2 lett. c) del D.Lgs. 138/2024. Le misure di mitigazione ransomware (backup immutabile WORM) e gli obiettivi di ripristino per i servizi critici (RTO < 2 ore per LepidaID) sono adeguati allo stato dell'arte. Non sono state rilevate lacune o non-conformità."*
 
 ---
 
-### NUOVO DOCUMENTO PROPOSTO: Piano di Gestione Incidenti Conformità NIS2 (Lepida SpA)
-
-**Codice Documento:** LPD-SEC-IRP-2026-NIS2  
-**Stato:** Approvato (Grounding NIS2)
-
-#### 1. Processo di Escalation e Triage
-Ogni anomalia rilevata deve essere classificata entro 15 minuti dal Security Operations Center (SOC).
-
-#### 2. Obblighi di Notifica al CSIRT Italia (Art. 25 D.Lgs. 138/2024)
-In caso di incidenti con impatto significativo, Lepida SpA effettuerà le seguenti comunicazioni tramite PEC o Portale ACN:
-*   **Pre-notifica (Early Warning):** Entro 24 ore dalla conoscenza dell'evento.
-*   **Notifica dell'incidente:** Entro 72 ore dalla conoscenza dell'evento.
-*   **Relazione Finale:** Entro 1 mese dalla risoluzione, contenente la Root Cause Analysis.
-...
-```
+### SCENARIO 2: Verifica Sicurezza Fisica e Controllo Accessi degli Uffici
+*   **Obiettivo:** Verificare se il manuale operativo reale di LepidaID risponde ai requisiti di sicurezza fisica e personale dell'Art. 24 comma 2 lettera i).
+*   **Prompt da digitare in chat (all'agente Root o allo Specialista Personnel & Asset):**
+    > *"Esegui una verifica di conformità sul manuale `manuale_operativo.pdf` rispetto all'Art. 24 comma 2 lettera i) della NIS2. I nostri uffici di registrazione e le procedure sul personale sono conformi?"*
+*   **Comportamento dell'Agente:**
+    1. L'agente Root indirizza la richiesta allo **Specialista Personale, Accessi e Asset**.
+    2. L'agente interroga `ds-personnel-asset` e analizza le sezioni di sicurezza fisica del manuale operativo.
+*   **Risposta attesa (Sola Verifica):**
+    > *"**Stato: VERIFICATO (CONFORME)**. Il manuale operativo di LepidaID (`manuale_operativo.pdf`) è conforme all'Art. 24 comma 2 lett. i). Il documento dettaglia adeguatamente i requisiti di sicurezza fisica delle sedi di registrazione (RA) e il controllo degli accessi elettronici e fisici. Le procedure di identificazione e verifica del personale addetto sono allineate ai requisiti di sicurezza e affidabilità richiesti dalla NIS2."*
 
 ---
 
-### SCENARIO 2: Rilevamento e Fix della Procedura di Qualifica Fornitori (Supply Chain)
+## FASE 3: Esecuzione degli Scenari di Rilevamento e Correzione (Gap & Fix)
 
-#### 1. Obiettivo dello Scenario
-Dimostrare come l'agente esamini le linee guida degli acquisti e generi un "Cybersecurity Annex" integrativo per imporre requisiti NIS2 obbligatori ai fornitori cloud terzi.
+In questi scenari, l'agente esamina i documenti obsoleti, rileva le violazioni e genera il documento correttivo.
 
-#### 2. Prompt da digitare nella chat (all'agente Root o allo Specialista Supply Chain):
-> *"Verifica il documento `Procedura_Qualifica_Fornitori_OBSOLETA.txt` rispetto all'Art. 24 comma 2 lettera d) della NIS2. Poiché mancano i requisiti per la sicurezza della supply chain cloud, scrivi un 'Cybersecurity Annex' (Allegato di Sicurezza) in Markdown pronto da aggiungere ai nuovi contratti per sanare le lacune."*
+### SCENARIO 3: Rilevamento e Fix del Piano Incident Response Obsoleto
+*   **Obiettivo:** Rilevare che il vecchio piano non rispetta le tempistiche NIS2 e generare il nuovo piano conforme.
+*   **Prompt da digitare in chat (all'agente Root o allo Specialista Incidenti):**
+    > *"Ho caricato sul nostro data store il documento `Piano_Incident_Response_OBSOLETO.txt`. Analizzalo rispetto alla NIS2 e scrivi un nuovo documento sostitutivo in formato Markdown che corregga tutte le mancanze e ci renda conformi."*
+*   **Risposta attesa (Gap & Fix):**
+    L'agente evidenzierà le mancanze (es. assenza di notifica CSIRT entro 24h/72h e presenza di tempi obsoleti di 48 ore lavorative) e fornirà il testo del nuovo piano conforme:
+    ```markdown
+    ### Analisi delle Non-Conformità (Gap Analysis)
+    * Violazione dell'obbligo di notifica al CSIRT Italia (è presente solo la Polizia Postale).
+    * Tempistiche errate (48 ore dalla risoluzione invece del pre-allarme a 24 ore dalla conoscenza).
 
-#### 3. Comportamento dell'Agente:
-*   L'agente rileva che la vecchia procedura richiede solo la certificazione generica ISO 9001 (Qualità) e non cita cloud, vulnerabilità o incidenti del fornitore.
-*   Genera un documento integrativo da allegare ai contratti futuri che impone ISO 27017/27018, penali e diritti di audit.
-
-#### 4. Risposta attesa (Output dell'Agente):
-```markdown
-### Lacune Rilevate nel documento obsoleto:
-* Nessun requisito di certificazione di sicurezza specifico per i cloud provider (ISO 27017/27018).
-* Assenza del diritto di audit di sicurezza sui sistemi del fornitore.
-* Mancanza dell'obbligo di notifica a Lepida di incidenti informatici occorsi al fornitore.
-
----
-
-### ALLEGATO TECNICO CONTRATTUALE: Cybersecurity Annex (Lepida SpA)
-
-#### Art. 1 - Certificazioni Obbligatorie
-Il Fornitore di servizi Cloud dichiara e garantisce di essere in possesso delle certificazioni ISO/IEC 27001, ISO/IEC 27017 e ISO/IEC 27018 in corso di validità.
-
-#### Art. 2 - Diritti di Audit (Right to Audit)
-Lepida SpA si riserva il diritto di effettuare verifiche e audit di sicurezza (anche tramite penetraton test coordinati) sui sistemi del Fornitore utilizzati per l'erogazione del servizio, con preavviso di 5 giorni lavorativi.
-
-#### Art. 3 - Gestione Incidenti del Fornitore
-Il Fornitore ha l'obbligo di notificare a Lepida SpA qualsiasi incidente informatico che interessi le infrastrutture di erogazione del servizio entro **24 ore** dal rilevamento.
-```
+    ---
+    ### NUOVO DOCUMENTO: Piano di Gestione Incidenti NIS2 (Lepida SpA)
+    ...
+    ```
 
 ---
 
-## FASE 3: Presentazione dell'Assessment Finale (Tabella Gap / Conformità)
+### SCENARIO 4: Rilevamento e Fix della Procedura di Qualifica Fornitori (Supply Chain)
+*   **Obiettivo:** Esaminare le vecchie linee guida acquisti e generare un "Cybersecurity Annex" integrativo per imporre requisiti NIS2 ai fornitori.
+*   **Prompt da digitare in chat (all'agente Root o allo Specialista Supply Chain):**
+    > *"Verifica il documento `Procedura_Qualifica_Fornitori_OBSOLETA.txt` rispetto alla NIS2. Scrivi un 'Cybersecurity Annex' (Allegato di Sicurezza) in Markdown pronto da aggiungere ai contratti dei fornitori per risolvere le mancanze."*
+*   **Risposta attesa (Gap & Fix):**
+    L'agente rileva la mancanza di requisiti cloud (ISO 27017/27018), l'assenza del diritto di audit e l'assenza di obblighi di notifica del fornitore a Lepida, e scrive l'allegato contrattuale correttivo.
+
+---
+
+## FASE 4: Presentazione dell'Assessment Finale (Tabella Gap / Conformità)
 
 Per concludere la demo, puoi chiedere al Root Agent:
-> *"Genera un report finale in formato tabellare che riassuma quali documenti obsoleti abbiamo analizzato, quali lacune abbiamo corretto e quali nuovi documenti conformi sono stati generati."*
+> *"Genera un report finale in formato tabellare che riassuma quali documenti (conformi e non conformi) abbiamo verificato in questa sessione di demo, quali esiti di conformità sono emersi e quali azioni correttive abbiamo implementato."*
 
-L'agente produrrà una tabella riepilogativa chiara dell'attività di assessment e fix completata.
+L'agente produrrà una tabella riepilogativa chiara che funge da cruscotto finale per la presentazione.

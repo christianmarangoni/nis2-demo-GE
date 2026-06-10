@@ -63,7 +63,7 @@ nis2-agentic-rag-prototype/
 │   ├── Procedura_Qualifica_Fornitori_ICT_Lepida_SIMULATO.md
 │   ├── Policy_Gestione_Vulnerabilita_e_SDLC_Lepida_SIMULATO.md
 │   └── Metodologia_Analisi_Rischi_e_Audit_Lepida_SIMULATO.md
-└── gcs_upload/                     # Copie di tutti i file .md convertiti in .txt pronti per Google Cloud Storage (GCS)
+└── gcs_upload/                     # Copie di tutti i file .md rinominati con estensione .txt pronti per Google Cloud Storage (GCS)
 ```
 
 Ogni cartella degli agenti contiene:

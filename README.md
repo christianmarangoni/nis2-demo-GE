@@ -51,21 +51,22 @@ nis2-agentic-rag-prototype/
 ├── specialist_risk_audit/
 ├── specialist_system_vuln/
 ├── specialist_personnel_asset/
-├── documenti_reali/                # Documenti pubblici reali scaricati
+├── documenti_reali/                # Documenti pubblici reali scaricati (da inserire in Google Drive, <80 pag.)
 │   ├── manuale_operativo.pdf       # Manuale Operativo LepidaID (SPID)
 │   ├── carta_dei_servizi.pdf       # Carta dei Servizi LepidaID
 │   ├── manuale_utente.pdf          # Guida utente LepidaID
 │   ├── soluzioni_tecnologiche.pdf  # Allegati tecnici e soluzioni
 │   └── trattamento_dati.pdf        # Informativa e flussi privacy (GDPR)
-└── documenti_simulati/             # Documenti interni simulati (riservati)
-    ├── Piano_Incident_Response_Lepida_SIMULATO.md
-    ├── Piano_Disaster_Recovery_e_Backup_Lepida_SIMULATO.md
-    ├── Procedura_Qualifica_Fornitori_ICT_Lepida_SIMULATO.md
-    ├── Policy_Gestione_Vulnerabilita_e_SDLC_Lepida_SIMULATO.md
-    └── Metodologia_Analisi_Rischi_e_Audit_Lepida_SIMULATO.md
+├── documenti_simulati/             # Documenti interni simulati (riservati) in .md
+│   ├── Piano_Incident_Response_Lepida_SIMULATO.md
+│   ├── Piano_Disaster_Recovery_e_Backup_Lepida_SIMULATO.md
+│   ├── Procedura_Qualifica_Fornitori_ICT_Lepida_SIMULATO.md
+│   ├── Policy_Gestione_Vulnerabilita_e_SDLC_Lepida_SIMULATO.md
+│   └── Metodologia_Analisi_Rischi_e_Audit_Lepida_SIMULATO.md
+└── gcs_upload/                     # Copie di tutti i file .md convertiti in .txt pronti per Google Cloud Storage (GCS)
 ```
 
-Ogni cartella contiene:
+Ogni cartella degli agenti contiene:
 - **`agent_config.md`** — System prompt, modello e descrizione dell'agente
 - **`normativa_estratto.md`** — Estratto del D.Lgs. 138/2024 pertinente all'agente
 
@@ -85,8 +86,8 @@ Ogni cartella contiene:
 
 ## Setup su Vertex AI Agent Builder
 
-1. Creare l'**Agente Root** con `gemini-2.5-flash` per routing a bassa latenza
-2. Creare gli **8 Specialisti** con `gemini-3-pro` per ragionamento complesso
-3. Configurare i **Data Store GCS** con i rispettivi `normativa_estratto.md`
-4. Integrare documenti aziendali Lepida via **Google Drive** nei Data Store (usando i file in `documenti_reali` e `documenti_simulati` per i test)
-5. Configurare le regole di **routing** nel Root Agent
+1. **Agente Root**: Creare l'orchestratore con `gemini-2.5-flash` (istruzioni in `root_supervisor/agent_config.md`).
+2. **8 Agenti Specialisti**: Creare gli agenti con `gemini-3-pro` per ragionamento complesso (istruzioni in `specialist_*/agent_config.md`).
+3. **Data Store Google Drive (PDF < 80 pagine)**: Caricare tutti i file PDF contenuti nella cartella `documenti_reali/` su Google Drive ed associarli ai relativi Data Store (sono tutti inferiori a 80 pagine).
+4. **Data Store GCS (file .txt)**: Caricare i file `.txt` della cartella `gcs_upload/` (normative e documenti simulati) all'interno di bucket Google Cloud Storage (GCS) ed associarli ai rispettivi Data Store.
+5. **Routing**: Configurare le regole di instradamento dall'Agente Root agli 8 specialisti.

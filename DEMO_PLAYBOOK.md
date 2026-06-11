@@ -25,13 +25,14 @@ Crea i **Data Store** separati su Vertex AI Agent Builder, selezionando la tipol
 
 ## FASE 2: Creazione degli Agenti (Vertex AI Agent Designer)
 
-Per collegare la base di conoscenza (Data Store) agli agenti, utilizzeremo esclusivamente l'interfaccia **Agent Designer** di Vertex AI:
+Per collegare la base di conoscenza (Data Store) agli agenti e configurare il routing, utilizzeremo l'interfaccia **Agent Designer** di Vertex AI:
 
-1. Crea un'app/agente separato per ciascuno dei 7 agenti specialisti.
-2. Durante la procedura di configurazione, associa **direttamente il rispettivo Data Store** come fonte dati primaria dell'agente.
-3. Nella sezione dedicata alle istruzioni dell'agente (System Instructions), incolla le istruzioni prelevate dal relativo file `agent_config.md` presente nella cartella dell'agente.
+1. Crea una singola **Agent App**. Il Default Agent fungerà da **Root Supervisor**. Copia le sue istruzioni dal file `root_supervisor/agent_config.md`.
+2. All'interno della stessa app, crea **8 Sub-Agenti** per ogni specialista, copiando le rispettive istruzioni dai file `specialist_*/agent_config.md`.
+3. Associa i Data Store caricati nella Fase 1 **esclusivamente ai rispettivi sub-agenti** (il Root Supervisor non ha bisogno di accedere ai Data Store direttamente).
+4. Configura le regole di **Routing** nel Root Supervisor affinché indirizzi l'utente al sub-agente corretto in base alle parole chiave e all'intento della richiesta (es. "backup" -> Specialista Continuità Operativa).
 
-In questo approccio piatto, non è necessario configurare tool complessi o instradamenti gerarchici (routing); la conversazione avviene direttamente con l'agente di dominio.
+In questo approccio gerarchico, l'utente interagisce sempre con il Root Supervisor, il quale smista la richiesta al sub-agente competente, che esegue l'analisi RAG e restituisce il controllo al Root.
 
 ---
 
@@ -41,7 +42,7 @@ In questi scenari, l'agente esamina i documenti aziendali conformi e certifica c
 
 ### SCENARIO 1: Verifica Continuità Operativa e Backup Anti-Ransomware
 *   **Obiettivo:** Verificare se il piano di DR e Backup simulato soddisfa i requisiti dell'Art. 24 comma 2 lettera c).
-*   **Prompt da digitare in chat (all'agente Specialista Continuità):**
+*   **Prompt da digitare in chat (al Root Supervisor):**
     > *"Analizza il documento `Piano_Disaster_Recovery_e_Backup_Lepida_SIMULATO.txt` e verifica se la nostra politica di backup e disaster recovery è conforme all'Art. 24 comma 2 lettera c) della NIS2. Ci sono lacune?"*
 *   **Comportamento dell'Agente:**
     L'agente interroga `ds-continuity` e confronta le misure reali (strategia 3-2-1-1, backup WORM immutabili a 30 giorni, RTO/RPO per LepidaID) con la normativa.
@@ -52,7 +53,7 @@ In questi scenari, l'agente esamina i documenti aziendali conformi e certifica c
 
 ### SCENARIO 2: Verifica Sicurezza Fisica e Controllo Accessi degli Uffici
 *   **Obiettivo:** Verificare se il manuale operativo reale di LepidaID risponde ai requisiti di sicurezza fisica e personale dell'Art. 24 comma 2 lettera i).
-*   **Prompt da digitare in chat (all'agente Specialista Personnel & Asset):**
+*   **Prompt da digitare in chat (al Root Supervisor):**
     > *"Esegui una verifica di conformità sul manuale `manuale_operativo.pdf` rispetto all'Art. 24 comma 2 lettera i) della NIS2. I nostri uffici di registrazione e le procedure sul personale sono conformi?"*
 *   **Comportamento dell'Agente:**
     L'agente interroga `ds-personnel-asset` e analizza le sezioni di sicurezza fisica del manuale operativo.
@@ -67,7 +68,7 @@ In questi scenari, l'agente esamina i documenti obsoleti, rileva le violazioni e
 
 ### SCENARIO 3: Rilevamento e Fix del Piano Incident Response Obsoleto
 *   **Obiettivo:** Rilevare che il vecchio piano non rispetta le tempistiche NIS2 e generare il nuovo piano conforme.
-*   **Prompt da digitare in chat (all'agente Specialista Incidenti):**
+*   **Prompt da digitare in chat (al Root Supervisor):**
     > *"Ho caricato sul nostro data store il documento `Piano_Incident_Response_OBSOLETO.txt`. Analizzalo rispetto alla NIS2 e scrivi un nuovo documento sostitutivo in formato Markdown che corregga tutte le mancanze e ci renda conformi."*
 *   **Risposta attesa (Gap & Fix):**
     L'agente evidenzierà le mancanze (es. assenza di notifica CSIRT entro 24h/72h e presenza di tempi obsoleti di 48 ore lavorative) e fornirà il testo del nuovo piano conforme:
@@ -85,7 +86,7 @@ In questi scenari, l'agente esamina i documenti obsoleti, rileva le violazioni e
 
 ### SCENARIO 4: Rilevamento e Fix della Procedura di Qualifica Fornitori (Supply Chain)
 *   **Obiettivo:** Esaminare le vecchie linee guida acquisti e generare un "Cybersecurity Annex" integrativo per imporre requisiti NIS2 ai fornitori.
-*   **Prompt da digitare in chat (all'agente Specialista Supply Chain):**
+*   **Prompt da digitare in chat (al Root Supervisor):**
     > *"Verifica il documento `Procedura_Qualifica_Fornitori_OBSOLETA.txt` rispetto alla NIS2. Scrivi un 'Cybersecurity Annex' (Allegato di Sicurezza) in Markdown pronto da aggiungere ai contratti dei fornitori per risolvere le mancanze."*
 *   **Risposta attesa (Gap & Fix):**
     L'agente rileva la mancanza di requisiti cloud (ISO 27017/27018), l'assenza del diritto di audit e l'assenza di obblighi di notifica del fornitore a Lepida, e scrive l'allegato contrattuale correttivo.

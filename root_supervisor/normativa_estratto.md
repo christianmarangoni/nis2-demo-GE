@@ -1,0 +1,1 @@
+# Questo agente non ha bisogno di estratti normativi diretti, utilizza gli strumenti di routing di Agent Designer per invocare i sub-agenti che possiedono i propri Data Store.

@@ -6,7 +6,8 @@ Sistema multi-agente basato su Vertex AI Agent Builder per l'assessment della co
 
 ## Architettura Implementata
 
-**8 Agenti Specialisti** con copertura al 100% dell'Art. 24 comma 2 (10 misure obbligatorie a-l) e obblighi ancillari.
+**Architettura Multi-Agente (Agent-to-Agent)**:
+**1 Root Supervisor (Default Agent)** che riceve le richieste e instrada l'utente verso **8 Sub-Agenti Specialisti** con copertura al 100% dell'Art. 24 comma 2 (10 misure obbligatorie a-l) e obblighi ancillari. L'interazione utente è centralizzata sul Root Agent.
 
 ### Mappatura Completa Art. 24 c.2 → Agenti
 
@@ -39,7 +40,8 @@ Sistema multi-agente basato su Vertex AI Agent Builder per l'assessment della co
 ## Struttura del Repository
 
 *   [DEMO_PLAYBOOK.md](DEMO_PLAYBOOK.md): Guida passo-passo per configurare e presentare la demo con scenari di verifica e gap-fix.
-*   [specialist_governance/](specialist_governance/README.md): Governance, Compliance e Sanzioni (Art. 23, 7, 27, 30, 38).
+*   [root_supervisor/](root_supervisor/agent_config.md): Agente principale di smistamento (Routing verso i Sub-Agenti).
+*   [specialist_governance/](specialist_governance/agent_config.md): Governance, Compliance e Sanzioni (Art. 23, 7, 27, 30, 38).
 *   [specialist_incident/](specialist_incident/README.md): Gestione Incidenti e Notifiche (Art. 24 c.2 lett. b, Art. 25, 26).
 *   [specialist_continuity/](specialist_continuity/README.md): Continuità Operativa e DR (Art. 24 c.2 lett. c).
 *   [specialist_supply_chain/](specialist_supply_chain/README.md): Sicurezza Supply Chain (Art. 24 c.2 lett. d).
@@ -72,7 +74,9 @@ Ogni cartella degli agenti contiene:
 
 ## Setup su Vertex AI Agent Builder
 
-1. **8 Agenti Specialisti**: Creare gli agenti con `gemini-3-pro` per ragionamento complesso nell'Agent Designer (istruzioni in `specialist_*/agent_config.md`).
-2. **Data Store Google Drive (PDF < 80 pagine)**: Caricare tutti i file PDF contenuti nella cartella `documenti_reali/` su Google Drive ed associarli ai relativi Data Store (sono tutti inferiori a 80 pagine).
-3. **Data Store GCS (file .txt)**: Caricare i file `.txt` della cartella `gcs_upload/` (normative e documenti simulati) all'interno di bucket Google Cloud Storage (GCS) ed associarli ai rispettivi Data Store.
-4. **Associazione Diretta**: Configurare l'associazione diretta dei Data Store ai rispettivi agenti.
+1. **Creazione App e Root Agent**: Creare una singola Agent App in Vertex AI Agent Builder. Il Default Agent agirà da `root_supervisor`. Incollare le sue istruzioni (da `root_supervisor/agent_config.md`).
+2. **Creazione 8 Sub-Agenti Specialisti**: All'interno della stessa app, creare gli 8 agenti specialisti come sub-agenti, copiando le rispettive System Instructions dai file `specialist_*/agent_config.md`.
+3. **Data Store Google Drive (PDF < 80 pagine)**: Caricare tutti i file PDF contenuti nella cartella `documenti_reali/` su Google Drive ed associarli ai relativi Data Store.
+4. **Data Store GCS (file .txt)**: Caricare i file `.txt` della cartella `gcs_upload/` (normative e documenti simulati) all'interno di bucket GCS ed associarli ai rispettivi Data Store.
+5. **Associazione Data Store**: Associare i Data Store esclusivamente ai rispettivi sub-agenti specialisti (il Root Agent non ha bisogno di Data Store).
+6. **Routing**: Configurare le regole di routing nel Root Agent affinché indirizzi le richieste ai sub-agenti in base all'argomento richiesto dall'utente.

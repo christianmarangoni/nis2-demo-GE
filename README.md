@@ -6,7 +6,7 @@ Sistema multi-agente basato su Vertex AI Agent Builder per l'assessment della co
 
 ## Architettura Implementata
 
-**1 Root Supervisor + 8 Agenti Specialisti** con copertura al 100% dell'Art. 24 comma 2 (10 misure obbligatorie a-l) e obblighi ancillari.
+**8 Agenti Specialisti** con copertura al 100% dell'Art. 24 comma 2 (10 misure obbligatorie a-l) e obblighi ancillari.
 
 ### Mappatura Completa Art. 24 c.2 → Agenti
 
@@ -39,7 +39,6 @@ Sistema multi-agente basato su Vertex AI Agent Builder per l'assessment della co
 ## Struttura del Repository
 
 *   [DEMO_PLAYBOOK.md](DEMO_PLAYBOOK.md): Guida passo-passo per configurare e presentare la demo con scenari di verifica e gap-fix.
-*   [root_supervisor/](root_supervisor/README.md): Agente Root (Supervisore NIS2).
 *   [specialist_governance/](specialist_governance/README.md): Governance, Compliance e Sanzioni (Art. 23, 7, 27, 30, 38).
 *   [specialist_incident/](specialist_incident/README.md): Gestione Incidenti e Notifiche (Art. 24 c.2 lett. b, Art. 25, 26).
 *   [specialist_continuity/](specialist_continuity/README.md): Continuità Operativa e DR (Art. 24 c.2 lett. c).
@@ -63,7 +62,7 @@ Ogni cartella degli agenti contiene:
 |---|:---:|
 | Gap Analysis dell'atto completo (7871 righe) | ✅ |
 | Migrazione da 5 a 8 agenti | ✅ |
-| Creazione agent_config.md per tutti i 9 agenti | ✅ |
+| Creazione agent_config.md per tutti gli 8 agenti | ✅ |
 | Estrazione normativa_estratto.md per tutti gli 8 specialisti | ✅ |
 | Rimozione cartelle legacy (business_continuity, incident_management) | ✅ |
 | Download dei 5 documenti reali da `id.lepida.it` | ✅ |
@@ -73,8 +72,7 @@ Ogni cartella degli agenti contiene:
 
 ## Setup su Vertex AI Agent Builder
 
-1. **Agente Root**: Creare l'orchestratore con `gemini-2.5-flash` (istruzioni in `root_supervisor/agent_config.md`).
-2. **8 Agenti Specialisti**: Creare gli agenti con `gemini-3-pro` per ragionamento complesso (istruzioni in `specialist_*/agent_config.md`).
-3. **Data Store Google Drive (PDF < 80 pagine)**: Caricare tutti i file PDF contenuti nella cartella `documenti_reali/` su Google Drive ed associarli ai relativi Data Store (sono tutti inferiori a 80 pagine).
-4. **Data Store GCS (file .txt)**: Caricare i file `.txt` della cartella `gcs_upload/` (normative e documenti simulati) all'interno di bucket Google Cloud Storage (GCS) ed associarli ai rispettivi Data Store.
-5. **Routing**: Configurare le regole di instradamento dall'Agente Root agli 8 specialisti.
+1. **8 Agenti Specialisti**: Creare gli agenti con `gemini-3-pro` per ragionamento complesso nell'Agent Designer (istruzioni in `specialist_*/agent_config.md`).
+2. **Data Store Google Drive (PDF < 80 pagine)**: Caricare tutti i file PDF contenuti nella cartella `documenti_reali/` su Google Drive ed associarli ai relativi Data Store (sono tutti inferiori a 80 pagine).
+3. **Data Store GCS (file .txt)**: Caricare i file `.txt` della cartella `gcs_upload/` (normative e documenti simulati) all'interno di bucket Google Cloud Storage (GCS) ed associarli ai rispettivi Data Store.
+4. **Associazione Diretta**: Configurare l'associazione diretta dei Data Store ai rispettivi agenti.

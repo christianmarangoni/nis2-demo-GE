@@ -10,18 +10,18 @@ La demo è strutturata per mostrare due tipi di flussi di lavoro:
 
 ## FASE 1: Preparazione dei Data Store su Vertex AI
 
-Crea i **Data Store** separati su Vertex AI Agent Builder, caricando sia i documenti normativi che quelli aziendali (reali, simulati conformi e non conformi):
+Crea i **Data Store** separati su Vertex AI Agent Builder, selezionando la tipologia corretta e caricando sia i documenti normativi che quelli aziendali (reali, simulati conformi e non conformi) come descritto nella seguente tabella:
 
-| Nome Data Store | Documento Normativo (da GCS - `.txt`) | Documenti Aziendali (da GCS / Drive) |
-|---|---|---|
-| **ds-governance** | `gcs_upload/specialist_governance/normativa_estratto.txt` | *Drive:* `documenti_reali/trattamento_dati.pdf` |
-| **ds-incident** | `gcs_upload/specialist_incident/normativa_estratto.txt` | *Drive:* `documenti_reali/carta_dei_servizi.pdf`<br>*GCS:* `gcs_upload/documenti_simulati/Piano_Incident_Response_Lepida_SIMULATO.txt`<br>*GCS:* `gcs_upload/documenti_non_conformi/Piano_Incident_Response_OBSOLETO.txt` |
-| **ds-continuity** | `gcs_upload/specialist_continuity/normativa_estratto.txt` | *GCS:* `gcs_upload/documenti_simulati/Piano_Disaster_Recovery_e_Backup_Lepida_SIMULATO.txt` |
-| **ds-supply-chain**| `gcs_upload/specialist_supply_chain/normativa_estratto.txt`| *GCS:* `gcs_upload/documenti_simulati/Procedura_Qualifica_Fornitori_ICT_Lepida_SIMULATO.txt`<br>*GCS:* `gcs_upload/documenti_non_conformi/Procedura_Qualifica_Fornitori_OBSOLETA.txt` |
-| **ds-ict-security**| `gcs_upload/specialist_ict_security/normativa_estratto.txt`| *Drive:* `documenti_reali/soluzioni_tecnologiche.pdf`<br>*Drive:* `documenti_reali/manuale_operativo.pdf` |
-| **ds-risk-audit** | `gcs_upload/specialist_risk_audit/normativa_estratto.txt` | *GCS:* `gcs_upload/documenti_simulati/Metodologia_Analisi_Rischi_e_Audit_Lepida_SIMULATO.txt` |
-| **ds-system-vuln** | `gcs_upload/specialist_system_vuln/normativa_estratto.txt` | *GCS:* `gcs_upload/documenti_simulati/Policy_Gestione_Vulnerabilita_e_SDLC_Lepida_SIMULATO.txt` |
-| **ds-personnel-asset**|`gcs_upload/specialist_personnel_asset/normativa_estratto.txt`| *Drive:* `documenti_reali/manuale_operativo.pdf` |
+| Nome Data Store | Agente Associato | Tipologia Data Store | Documenti da Caricare |
+|---|---|---|---|
+| **ds-governance** | Specialista Governance, Compliance e Sanzioni | **Misto** (GCS + Google Drive) | • **GCS:** `gcs_upload/specialist_governance/normativa_estratto.txt`<br>• **Drive:** `documenti_reali/trattamento_dati.pdf` |
+| **ds-incident** | Specialista Gestione Incidenti | **Misto** (GCS + Google Drive) | • **GCS:** `gcs_upload/specialist_incident/normativa_estratto.txt`<br>• **GCS:** `gcs_upload/documenti_simulati/Piano_Incident_Response_Lepida_SIMULATO.txt`<br>• **GCS:** `gcs_upload/documenti_non_conformi/Piano_Incident_Response_OBSOLETO.txt`<br>• **Drive:** `documenti_reali/carta_dei_servizi.pdf` |
+| **ds-continuity** | Specialista Continuità Operativa | **Cloud Storage (GCS)** | • **GCS:** `gcs_upload/specialist_continuity/normativa_estratto.txt`<br>• **GCS:** `gcs_upload/documenti_simulati/Piano_Disaster_Recovery_e_Backup_Lepida_SIMULATO.txt` |
+| **ds-supply-chain** | Specialista Supply Chain | **Cloud Storage (GCS)** | • **GCS:** `gcs_upload/specialist_supply_chain/normativa_estratto.txt`<br>• **GCS:** `gcs_upload/documenti_simulati/Procedura_Qualifica_Fornitori_ICT_Lepida_SIMULATO.txt`<br>• **GCS:** `gcs_upload/documenti_non_conformi/Procedura_Qualifica_Fornitori_OBSOLETA.txt` |
+| **ds-ict-security** | Specialista Igiene TIC, Crittografia e MFA | **Misto** (GCS + Google Drive) | • **GCS:** `gcs_upload/specialist_ict_security/normativa_estratto.txt`<br>• **Drive:** `documenti_reali/soluzioni_tecnologiche.pdf`<br>• **Drive:** `documenti_reali/manuale_operativo.pdf` |
+| **ds-risk-audit** | Specialista Analisi dei Rischi e Audit di Efficacia | **Cloud Storage (GCS)** | • **GCS:** `gcs_upload/specialist_risk_audit/normativa_estratto.txt`<br>• **GCS:** `gcs_upload/documenti_simulati/Metodologia_Analisi_Rischi_e_Audit_Lepida_SIMULATO.txt` |
+| **ds-system-vuln** | Specialista Sicurezza Sistemi, Sviluppo e Vulnerabilità | **Cloud Storage (GCS)** | • **GCS:** `gcs_upload/specialist_system_vuln/normativa_estratto.txt`<br>• **GCS:** `gcs_upload/documenti_simulati/Policy_Gestione_Vulnerabilita_e_SDLC_Lepida_SIMULATO.txt` |
+| **ds-personnel-asset** | Specialista Sicurezza del Personale, Accessi e Asset | **Misto** (GCS + Google Drive) | • **GCS:** `gcs_upload/specialist_personnel_asset/normativa_estratto.txt`<br>• **Drive:** `documenti_reali/manuale_operativo.pdf`<br>• **Drive:** `documenti_reali/manuale_utente.pdf` |
 
 ## FASE 2: Creazione degli Agenti e Associazione dei Data Store (Vertex AI Setup)
 

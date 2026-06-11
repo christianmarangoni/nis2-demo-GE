@@ -50,13 +50,13 @@ Sistema multi-agente basato su Vertex AI Agent Builder per l'assessment della co
 *   [specialist_system_vuln/](specialist_system_vuln/README.md): Sicurezza Sistemi e Vulnerabilità (Art. 24 c.2 lett. e, Art. 16).
 *   [specialist_personnel_asset/](specialist_personnel_asset/README.md): Personale, Accessi, Asset e Sicurezza Fisica (Art. 24 c.2 lett. i).
 *   [documenti_reali/](documenti_reali/README.md): Cartella contenente i documenti pubblici reali scaricati (da inserire in Google Drive).
-*   [documenti_simulati/](documenti_simulati/README.md): Cartella contenente i piani e le policy aziendali simulate (in formato Markdown).
+*   [documenti_simulati/](documenti_simulati/README.md): Cartella contenente i piani e le policy aziendali simulate (in formato .txt).
 *   [gcs_upload/](gcs_upload/README.md): Copie di tutti i file di configurazione, normative e simulazioni rinominati in `.txt` pronti per GCS.
 
 
 Ogni cartella degli agenti contiene:
 - **`agent_config.md`** — System prompt, modello e descrizione dell'agente
-- **`normativa_estratto.md`** — Estratto del D.Lgs. 138/2024 pertinente all'agente
+- **`normativa_estratto.txt`** — Estratto del D.Lgs. 138/2024 pertinente all'agente
 
 ## Lavoro Completato
 
@@ -65,7 +65,7 @@ Ogni cartella degli agenti contiene:
 | Gap Analysis dell'atto completo (7871 righe) | ✅ |
 | Migrazione da 5 a 8 agenti | ✅ |
 | Creazione agent_config.md per tutti gli 8 agenti | ✅ |
-| Estrazione normativa_estratto.md per tutti gli 8 specialisti | ✅ |
+| Estrazione normativa_estratto.txt per tutti gli 8 specialisti | ✅ |
 | Rimozione cartelle legacy (business_continuity, incident_management) | ✅ |
 | Download dei 5 documenti reali da `id.lepida.it` | ✅ |
 | Generazione dei 5 documenti interni simulati in Markdown | ✅ |

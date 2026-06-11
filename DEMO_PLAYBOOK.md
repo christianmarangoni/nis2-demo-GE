@@ -23,9 +23,61 @@ Crea i **Data Store** separati su Vertex AI Agent Builder, caricando sia i docum
 | **ds-system-vuln** | `gcs_upload/specialist_system_vuln/normativa_estratto.txt` | *GCS:* `gcs_upload/documenti_simulati/Policy_Gestione_Vulnerabilita_e_SDLC_Lepida_SIMULATO.txt` |
 | **ds-personnel-asset**|`gcs_upload/specialist_personnel_asset/normativa_estratto.txt`| *Drive:* `documenti_reali/manuale_operativo.pdf` |
 
+## FASE 2: Creazione degli Agenti e Associazione dei Data Store (Vertex AI Setup)
+
+Per collegare la base di conoscenza (Data Store) agli agenti all'interno della console di Vertex AI Agent Builder, segui una delle due procedure a seconda del tipo di console utilizzata.
+
+### Tabella di Associazione Agenti - Data Store - Tool
+Usa questa tabella di riferimento per configurare le associazioni sia per l'Opzione A che per l'Opzione B:
+
+| Agente Specialista | Nome Data Store (Fase 1) | ID/Nome Tool (Fase 2 - Opzione B) | Descrizione del Tool (per l'LLM) | Istruzione d'Uso del Tool (System Instructions) |
+|---|---|---|---|---|
+| **Specialista Governance, Compliance e Sanzioni** | `ds-governance` | `tool_query_governance` | *Cerca informazioni su governance, compliance, sanzioni e registrazioni ACN.* | "Usa sempre `tool_query_governance` per verificare la compliance di policy, formazione e adempimenti ACN." |
+| **Specialista Gestione Incidenti** | `ds-incident` | `tool_query_incident` | *Cerca informazioni su incident response, notifiche e tempistiche CSIRT.* | "Usa sempre `tool_query_incident` per verificare le procedure di gestione incidenti e le tempistiche di notifica." |
+| **Specialista Continuità Operativa** | `ds-continuity` | `tool_query_continuity` | *Cerca informazioni su continuità operativa, backup e disaster recovery.* | "Usa sempre `tool_query_continuity` per verificare i piani di continuità operativa, backup e disaster recovery." |
+| **Specialista Supply Chain** | `ds-supply-chain` | `tool_query_supply_chain` | *Cerca informazioni su contratti, qualifica fornitori e catena di approvvigionamento.* | "Usa sempre `tool_query_supply_chain` per verificare la sicurezza nei rapporti con i fornitori e MSP." |
+| **Specialista Igiene TIC, Crittografia e MFA** | `ds-ict-security` | `tool_query_ict_security` | *Cerca informazioni su crittografia, MFA, igiene informatica e sicurezza logica.* | "Usa sempre `tool_query_ict_security` per verificare le policy di crittografia, MFA e igiene TIC." |
+| **Specialista Analisi dei Rischi e Audit di Efficacia** | `ds-risk-audit` | `tool_query_risk_audit` | *Cerca informazioni su analisi dei rischi, audit e piani di miglioramento.* | "Usa sempre `tool_query_risk_audit` per verificare le metodologie di analisi rischi e audit periodici." |
+| **Specialista Sicurezza Sistemi, Sviluppo e Vulnerabilità** | `ds-system-vuln` | `tool_query_system_vuln` | *Cerca informazioni su vulnerabilità, patch management e SDLC sicuro.* | "Usa sempre `tool_query_system_vuln` per verificare le policy di gestione vulnerabilità e sviluppo software sicuro." |
+| **Specialista Sicurezza del Personale, Accessi e Asset** | `ds-personnel-asset` | `tool_query_personnel_asset` | *Cerca informazioni su sicurezza del personale, controllo accessi IAM e asset management.* | "Usa sempre `tool_query_personnel_asset` per verificare la sicurezza fisica, il personale e l'inventario asset." |
+
 ---
 
-## FASE 2: Esecuzione degli Scenari di Sola Verifica (Compliance Check)
+### Opzione A: Configurazione Standard tramite App Chat/Search (No-Code)
+Se utilizzi l'interfaccia classica di Vertex AI Search and Conversation per creare applicazioni separate:
+1. Crea un'applicazione di tipo **Chat** o **Search** per ciascuno degli 8 agenti specialisti.
+2. Durante la procedura guidata di creazione, la console chiederà di selezionare la sorgente dati: seleziona e **associa direttamente il rispettivo Data Store** come indicato nella tabella sopra (es. per l'agente incidenti associa `ds-incident`).
+3. Nella sezione **Configurations** dell'app, incolla le istruzioni di sistema (System Instructions) prelevate dal relativo file `agent_config.md` dell'agente.
+
+### Opzione B: Configurazione tramite Agent Console e Playbooks (Consigliato per Routing)
+Se utilizzi la nuova interfaccia **Vertex AI Agents** (basata su Playbooks/Dialogflow CX) per creare il sistema multi-agente gerarchico:
+
+#### 1. Creare i Tool di tipo Data Store:
+Per consentire a ciascun Playbook di interrogare la propria base di conoscenza, devi registrare i Data Store come strumenti (Tools):
+1. Dalla console di Vertex AI Agents, vai nel menu laterale su **Tools** e clicca su **Create**.
+2. Imposta il tipo di strumento come **Data Store**.
+3. Configura lo strumento inserendo i parametri corrispondenti alla riga della tabella:
+   * **Tool Name**: Inserisci l'ID/Nome Tool (es. `tool_query_incident`).
+   * **Data Store Project**: Seleziona il tuo progetto Google Cloud.
+   * **Data Store Location**: Seleziona la region (es. `global` o `eu`).
+   * **Data Store ID**: Seleziona il rispettivo Data Store ID (es. `ds-incident`).
+   * **Description**: Copia la *Descrizione del Tool* corrispondente nella tabella.
+4. Salva e ripeti la procedura per tutti gli 8 Data Store.
+
+#### 2. Associare i Tool ai rispettivi Playbooks (Agenti):
+1. Vai alla sezione **Playbooks** e seleziona il Playbook dello specialista (es. `Specialista Gestione Incidenti`).
+2. Sotto la casella delle istruzioni di sistema, individua la sezione **Tools**.
+3. Seleziona e **aggiungi il Tool di Data Store creato in precedenza** (es. per l'agente incidenti aggiungi `tool_query_incident`).
+4. Nelle istruzioni di sistema (System Instructions) dell'agente, aggiungi l'**Istruzione d'Uso del Tool** specificata nella tabella (es: *"Usa sempre `tool_query_incident` per verificare le procedure di gestione incidenti e le tempistiche di notifica."*).
+
+#### 3. Configurazione del Routing sul Root Agent (Supervisor):
+1. Seleziona il Playbook principale dell'agente **Root Supervisor** (non associargli alcun Data Store direttamente).
+2. Nella sezione **Sub-Playbooks** (o Target Playbooks) dell'agente Root, aggiungi gli 8 agenti specialisti come destinazioni abilitate.
+3. Nelle istruzioni del Root (da `root_supervisor/agent_config.md`), definisci chiaramente le regole per indirizzare l'utente (es: *"Se l'utente chiede informazioni su backup, disaster recovery o continuità dei sistemi, delega l'esecuzione a `specialist_continuity`"*).
+
+---
+
+## FASE 3: Esecuzione degli Scenari di Sola Verifica (Compliance Check)
 
 In questi scenari, l'agente esamina i documenti aziendali conformi e certifica che non vi sono violazioni o lacune.
 
@@ -53,7 +105,7 @@ In questi scenari, l'agente esamina i documenti aziendali conformi e certifica c
 
 ---
 
-## FASE 3: Esecuzione degli Scenari di Rilevamento e Correzione (Gap & Fix)
+## FASE 4: Esecuzione degli Scenari di Rilevamento e Correzione (Gap & Fix)
 
 In questi scenari, l'agente esamina i documenti obsoleti, rileva le violazioni e genera il documento correttivo.
 
@@ -84,7 +136,7 @@ In questi scenari, l'agente esamina i documenti obsoleti, rileva le violazioni e
 
 ---
 
-## FASE 4: Presentazione dell'Assessment Finale (Tabella Gap / Conformità)
+## FASE 5: Presentazione dell'Assessment Finale (Tabella Gap / Conformità)
 
 Per concludere la demo, puoi chiedere al Root Agent:
 > *"Genera un report finale in formato tabellare che riassuma quali documenti (conformi e non conformi) abbiamo verificato in questa sessione di demo, quali esiti di conformità sono emersi e quali azioni correttive abbiamo implementato."*
